@@ -1,13 +1,19 @@
+# fly.toml app configuration file generated for superkalam-grafana on 2024-05-27T06:15:04+05:30
+#
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'supabase-grafana-metrics'
+app = 'superkalam-grafana'
+primary_region = 'bom'
 
 [build]
 
 [[mounts]]
-  source = 'supabase_metrics_data'
+  source = 'superkalam_metrics_data'
   destination = '/data'
+  auto_extend_size_threshold = 80
+  auto_extend_size_increment = '2GB'
+  auto_extend_size_limit = '12GB'
 
 [http_service]
   internal_port = 8080
@@ -16,6 +22,13 @@ app = 'supabase-grafana-metrics'
   auto_start_machines = true
   min_machines_running = 1
   processes = ['app']
+
+[checks]
+  [checks.tcp_check]
+    type = 'tcp'
+    interval = '10s'
+    timeout = '3s'
+    grace_period = '5s'
 
 [[vm]]
   memory = '1gb'
